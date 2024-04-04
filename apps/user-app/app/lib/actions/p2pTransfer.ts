@@ -61,5 +61,6 @@ export async function p2pTransfer(to: string, amount: number) {
                 toUserId: Number(toUser.id)
             }
         })
+
     })
 }
