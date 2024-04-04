@@ -16,7 +16,7 @@ async function getBalance() {
         amount: bal?.amount || 0,
         locked: bal?.locked || 0
     }
-}
+} 
 
 async function getOnRampTransactions() {
     const session = await getServerSession(authOptions);
@@ -32,6 +32,8 @@ async function getOnRampTransactions() {
         provider: t.provider
     }))
 }
+
+
 
 export default async function() {
     const balance = await getBalance();
