@@ -17,21 +17,28 @@ async function getP2pTransactions() {
       fromUser: { select: { name: true } },
       toUser: { select: { name: true } },
     },
+    orderBy: { timestamp: 'desc' }
   });
-  console.log("line 17", txns);
-
   return txns.map((t) => {
     let sign = "";
+    let message = "";
+    let counterPartyName = "";
     if (t.fromUserId === currentUserId) {
       sign = "-";
+      message = "sent money to";
+      counterPartyName = t.toUser.name || "";
     } else if (t.toUserId === currentUserId) {
       sign = "+";
+      message = "received money from";
+      counterPartyName = t.fromUser.name || "";
     }
     return {
       amount: t.amount,
       fromUserName: t.fromUser.name,
       toUserName: t.toUser.name,
       sign: sign,
+      message: `${message} ${counterPartyName}`,
+      timestamp:t.timestamp
     };
   });
 }
@@ -40,25 +47,25 @@ export default async function () {
 
   return (
     <div className="w-full">
-    <div className="h-[90vh]">
-      <Center>
-        <Card title="Recent Transactions">
-          <div className="min-w-72 pt-2">
-            {history.map((t) => (
-              <>
-                <div>
-                  <div className="text-sm">Received INR</div>
-                  <div className="text-slate-600 text-xs">{t.toUserName}</div>
+      <div className="h-[90vh]">
+        <Center>
+          <Card title="Transaction History">
+            <div className="min-w-72 pt-2">
+              {history.map((t) => (
+                <div className="p-5 border bottom-1">
+                  <div className="flex justify-between">
+                    <div className="text-sm">{t.message}</div>
+                    <div>
+                      {t.sign} Rs {t.amount / 100}
+                    </div>
+                  </div>
+                  <div className="text-slate-600 text-xs">{t.timestamp.toDateString()}</div>
                 </div>
-                <div className="flex flex-col justify-center">
-                  {t.sign} Rs {t.amount / 100}
-                </div>
-              </>
-            ))}
-          </div>
-        </Card>
-      </Center>
-    </div>
+              ))}
+            </div>
+          </Card>
+        </Center>
+      </div>
     </div>
   );
 }
