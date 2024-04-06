@@ -1,0 +1,23 @@
+name: Build succeeds on PR
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+
+jobs:
+  build:
+    name: Build the project
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        with:
+          node-version: '20'
+
+      - name: Install the Dependencies
+        run: npm install
+
+      - name: Run Build
+        run: npm run build
